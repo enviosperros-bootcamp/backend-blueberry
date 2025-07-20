@@ -54,4 +54,18 @@ class User extends Authenticatable
         ];
     }
 
+
+    // RELACIONES BD
+    public function specialties()
+    {
+        return $this->belongsToMany(Specialty::class, 'doctor_specialty');
+    }
+
+    public function locations()
+    {
+        return $this->hasMany(Location::class);
+    }
+
+
+
 }
