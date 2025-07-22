@@ -8,7 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
 
-class User extends Authenticatable
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -66,6 +68,18 @@ class User extends Authenticatable
         return $this->hasMany(Location::class);
     }
 
+    // IMPLEMENTACION DE JWTSubject
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
 
+    public function getJWTCustomClaims()
+    {
+        return [
+        'name' => $this->name,
+        'email' => $this->email,
+        ];
+    }
 
 }
