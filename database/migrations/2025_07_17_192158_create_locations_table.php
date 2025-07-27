@@ -12,8 +12,8 @@ return new class extends Migration
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // doctor_id
-            $table->string('city');
-            $table->string('address');
+            $table->string('city')->default('N/A');
+            $table->string('address')->default('N/A');
             $table->timestamps();
         });
     }

@@ -19,8 +19,7 @@ return new class extends Migration
             $table->string('password');                 
             $table->string('phone');                    
             $table->enum('role', ['doctor', 'patient']);
-            $table->date('birthdate');                  
-            $table->json('address')->nullable();        
+            $table->date('birthdate');                       
             $table->rememberToken();
             $table->timestamps();
         });

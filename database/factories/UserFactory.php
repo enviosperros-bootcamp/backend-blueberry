@@ -39,12 +39,6 @@ class UserFactory extends Factory
             'phone' => $this->faker->phoneNumber(),
             'role' => 'doctor',
             'birthdate' => $this->faker->date('Y-m-d', '2000-01-01'),
-            'address' => json_encode([
-                'street' => $this->faker->streetAddress(),
-                'city' => $this->faker->city(),
-                'state' => $this->faker->state(),
-                'zip' => $this->faker->postcode(),
-            ]),
             'remember_token' => Str::random(10),
         ];
     }
