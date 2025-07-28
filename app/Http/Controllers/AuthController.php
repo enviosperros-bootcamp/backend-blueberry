@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\DB;
 use \Throwable;
+
 class AuthController extends Controller
 {
 
@@ -61,15 +62,17 @@ class AuthController extends Controller
         // cambios location
         if (!empty($validated['address']) && $user->role === 'doctor') {
             foreach ($validated['address'] as $location) {
-                // verificar si la dirección ya existe antes de crearla
-                $existingLocation = $user->locations()->where('address', $location['street'] ?? null)
+                $existingLocation = $user->locations()
+                    ->where('address', $location['address'] ?? null)
                     ->where('city', $location['city'] ?? null)
                     ->first();
+
                 if (!$existingLocation) {
                     $user->locations()->create($location);
                 }
             }
         }
+
 
 
 
