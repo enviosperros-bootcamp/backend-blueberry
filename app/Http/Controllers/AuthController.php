@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Location;
+use App\Models\Specialty;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\DB;
@@ -34,6 +35,7 @@ class AuthController extends Controller
             'address' => 'nullable|array',
             'address.*.address' => 'nullable|string',
             'address.*.city' => 'nullable|string',
+            'specialties' => 'nullable|array',
         ]);
 
         DB::beginTransaction();
@@ -53,12 +55,6 @@ class AuthController extends Controller
                 }
             }
 
-            DB::commit();
-        } catch (Throwable $e) {
-            DB::rollBack();
-            throw $e;
-        }
-
         // cambios location
         if (!empty($validated['address']) && $user->role === 'doctor') {
             foreach ($validated['address'] as $location) {
@@ -73,15 +69,25 @@ class AuthController extends Controller
             }
         }
 
+        // especialidades
+        // solo si el usuario es un doctor y se han proporcionado especialidades
+        if (!empty($validated['specialties']) && $user->role === 'doctor') {
+            $specialtyIds = Specialty::whereIn('name', $validated['specialties'])->pluck('id')->toArray();
+            $user->specialties()->sync($specialtyIds);
+        }
 
-
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
 
 
         $token = JWTAuth::fromUser($user);
 
         return response()->json([
             'message' => 'User registered successfully',
-            'user' => $user,
+            'user' => $user->load(['locations', 'specialties']),
             'token' => $token
         ], 201);
     }
