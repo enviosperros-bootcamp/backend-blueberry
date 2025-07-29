@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('services', function (Blueprint $table) {
-            $table->id(); // id del servicio
-            $table->string('name'); // Nombre del servicio
-            $table->decimal('price', 8, 2); // Precio del servicio
-            $table->foreignId('doctor_id')->constrained('users'); // Relación con la tabla 'users'
-            $table->string('service_type'); // Tipo de servicio (por ejemplo, consulta, cirugía, etc.)
-            $table->timestamps(); // created_at y updated_at
+            $table->id();
+            $table->string('name');  // Nombre del servicio
+            $table->decimal('price', 8, 2);  // Precio del servicio
+            $table->foreignId('doctor_id')->constrained('users')->onDelete('cascade');  // FK a la tabla 'users' (doctor)
+            $table->string('service_type');  // Tipo de servicio (ej. consulta, cirugía, etc.)
+            $table->timestamps();
         });
     }
 

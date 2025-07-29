@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('feedback', function (Blueprint $table) {
             $table->id(); // id del feedback
-            $table->foreignId('doctor_info_id')->constrained('doctor_infos'); // FK a doctor_infos
+            $table->foreignId('user_id')->constrained('users');  // Relación directa con 'users' (doctores)
             $table->text('text'); // Comentarios del feedback
             $table->integer('score'); // Puntuación
             $table->timestamps(); // created_at y updated_at
