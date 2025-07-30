@@ -9,6 +9,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\DoctorInfoController;
+use App\Http\Controllers\DoctorController;
 
 
 // RUTAS DE AUTENTICACIÓN JWT
@@ -44,4 +45,5 @@ Route::get('/doctor_infos/{id}/feedbacks', [DoctorInfoController::class, 'getFee
 
 Route::middleware('auth:api')->group(function () {
     // Rutas protegidas
+    Route::get('/doctors', [DoctorController::class, 'index']);
 });
