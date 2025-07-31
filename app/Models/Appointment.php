@@ -32,4 +32,10 @@ class Appointment extends Model
     {
         return $this->belongsTo(Service::class);
     }
+
+    // Relación con los feedbacks
+    public function feedbacks()
+    {
+        return $this->belongsTo(Feedback::class);
+    }
 }

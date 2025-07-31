@@ -37,15 +37,26 @@ Route::prefix('appointments')->group(function () {
     Route::delete('/{id}', [AppointmentController::class, 'destroy']); 
 });
 
-// Ruta para feedback 
-Route::prefix('feedbacks')->group(function () {
-    Route::post('/', [FeedbackController::class, 'store']);
-    Route::get('/', [FeedbackController::class, 'index']);
+Route::prefix('appointments')->group(function () {
+    Route::post('{appointment_id}/feedback', [FeedbackController::class, 'store']);  // Crear un feedback asociado a una cita
 });
-// Ruta para la información del doctor 
-Route::post('/doctor_infos', [DoctorInfoController::class, 'store']);
-Route::get('/doctor_infos', [DoctorInfoController::class, 'index']);
-Route::get('/doctor_infos/{id}/feedbacks', [DoctorInfoController::class, 'getFeedbacks']);
+
+Route::prefix('doctores')->group(function () {
+    Route::get('/{id}/feedbacks', [DoctorInfoController::class, 'showFeedbacks']); // Ver feedbacks de un doctor
+});
+
+Route::prefix('doctores')->group(function () {
+    Route::get('/{id}', [DoctorInfoController::class, 'show']); // Ver info del doctor (GET)
+    Route::put('/{id}', [DoctorInfoController::class, 'update']); // Actualizar info del doctor (PUT)
+    Route::post('/{id}/especialidad', [DoctorInfoController::class, 'assignSpecialty']); // Asignar especialidad (POST)
+    Route::get('/{id}/especialidad', [DoctorInfoController::class, 'showSpecialty']); // Ver especialidad (GET)
+    Route::post('/{id}/usuario', [DoctorInfoController::class, 'associateUser']); // Asociar usuario (POST)
+    Route::get('/{id}/usuario', [DoctorInfoController::class, 'showUser']); // Ver usuario (GET)
+    Route::post('/{id}/servicios', [DoctorInfoController::class, 'addService']); // Agregar servicio (POST)
+    Route::get('/{id}/servicios', [DoctorInfoController::class, 'showServices']); // Ver servicios (GET)
+    Route::get('/{id}/feedbacks', [DoctorInfoController::class, 'showFeedbacks']); // Ver feedbacks (GET)
+});
+
 
 Route::middleware('auth:api')->group(function () {
     // Rutas protegidas
