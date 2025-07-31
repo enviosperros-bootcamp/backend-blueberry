@@ -20,23 +20,27 @@ Route::group(['prefix' => 'auth'], function () {
     Route::middleware('auth:api')->get('me', [AuthController::class, 'me']);
 });
 
-// Rutas para servicios
-Route::post('/services', [ServiceController::class, 'store']);  // Crear servicio
-Route::get('/services', [ServiceController::class, 'index']);  // Obtener servicios
-Route::get('/services/{id}', [ServiceController::class, 'show']);  // Obtener servicio específico
-Route::put('/services/{id}', [ServiceController::class, 'update']);  // Actualizar servicio
-Route::delete('/services/{id}', [ServiceController::class, 'destroy']);  // Eliminar servicio
+Route::prefix('services')->group(function () {
+    Route::get('/', [ServiceController::class, 'index']);
+    Route::get('/{id}', [ServiceController::class, 'show']);
+    Route::post('/', [ServiceController::class, 'store']);
+    Route::put('/{id}', [ServiceController::class, 'update']);
+    Route::delete('/{id}', [ServiceController::class, 'destroy']);
+});
 
-// Rutas para citas
-Route::post('/appointments', [AppointmentController::class, 'store']);  // Crear cita
-Route::get('/appointments', [AppointmentController::class, 'index']);  // Obtener todas las citas
-Route::get('/appointments/patient', [AppointmentController::class, 'getByPatient']);  // Obtener citas de un paciente
-Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);  // Eliminar cita
+Route::prefix('appointments')->group(function () {
+    Route::get('/', [AppointmentController::class, 'index']); 
+    Route::get('/by-patient', [AppointmentController::class, 'getByPatient']); 
+    Route::post('/', [AppointmentController::class, 'store']); 
+    Route::put('/{id}', [AppointmentController::class, 'update']); 
+    Route::delete('/{id}', [AppointmentController::class, 'destroy']); 
+});
 
 // Ruta para feedback 
-Route::post('/feedbacks', [FeedbackController::class, 'store']);
-Route::get('/feedbacks', [FeedbackController::class, 'index']);
-
+Route::prefix('feedbacks')->group(function () {
+    Route::post('/', [FeedbackController::class, 'store']);
+    Route::get('/', [FeedbackController::class, 'index']);
+});
 // Ruta para la información del doctor 
 Route::post('/doctor_infos', [DoctorInfoController::class, 'store']);
 Route::get('/doctor_infos', [DoctorInfoController::class, 'index']);

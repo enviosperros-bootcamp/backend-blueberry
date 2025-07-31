@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Feedback extends Model
 {
     protected $fillable = [
-        'doctor_id', 
+        'user_id', 
         'text', 
         'score'
     ];
 
     // Relación con el modelo User - Doctor
-    public function doctor()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'doctor_id'); 
+        return $this->belongsTo(User::class, 'user_id'); 
     }
 }
