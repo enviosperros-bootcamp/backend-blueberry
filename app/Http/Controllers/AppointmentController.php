@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use App\Models\Service;
 
 class AppointmentController extends Controller
 {
@@ -17,8 +18,13 @@ class AppointmentController extends Controller
             'motive' => 'required|string',
         ]);
 
+        $service = Service::findOrFail($validated['service_id']);
+        // Validar que el servicio realmente pertenece al doctor
+        // (recibir doctor_id desde el frontend)
+        $doctorId = $service->doctor_id;
         $appointment = Appointment::create([
             'patient_id' => $validated['patient_id'],
+            'doctor_id'  => $doctorId,
             'service_id' => $validated['service_id'],
             'date' => $validated['date'],
             'motive' => $validated['motive'],
@@ -33,7 +39,7 @@ class AppointmentController extends Controller
     // Obtener todas las citas (GET /api/appointments)
     public function index()
     {
-         $appointments = Appointment::with(['patient', 'service.doctor'])->get();
+        $appointments = Appointment::with(['patient', 'service.doctor'])->get();
 
         return response()->json([
             'appointments' => $appointments
@@ -47,7 +53,24 @@ class AppointmentController extends Controller
             'patient_id' => 'required|exists:users,id',
         ]);
 
-        $appointments = Appointment::where('patient_id', $validated['patient_id'])->get();
+        $appointments = Appointment::with(['doctor', 'service'])
+            ->where('patient_id', $validated['patient_id'])
+            ->get();
+
+        return response()->json([
+            'appointments' => $appointments
+        ]);
+    }
+
+    public function getByDoctor(Request $request)
+    {
+        $validated = $request->validate([
+            'doctor_id' => 'required|exists:users,id',
+        ]);
+
+        $appointments = Appointment::with(['patient', 'service'])
+            ->where('doctor_id', $validated['doctor_id'])
+            ->get();
 
         return response()->json([
             'appointments' => $appointments

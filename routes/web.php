@@ -13,7 +13,7 @@ Route::get('dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // endpoint busqueda por ciudad
-Route::get('/doctors', [DoctorController::class, 'index']);
+//Route::get('/doctors', [DoctorController::class, 'index']);
 
 
 

@@ -10,14 +10,39 @@ class SpecialtySeeder extends Seeder
     public function run(): void
     {
         $specialties = [
-            'Cardiología',
-            'Pediatría',
-            'Dermatología',
-            'Ginecología',
-            'Neurología',
-            'Odontología',
-            'Oftalmología',
-            'Ortopedia',
+            "Alergología",
+            "Anestesiología",
+            "Angiología",
+            "Cardiología",
+            "Cirugía General",
+            "Cirugía Plástica y Reconstructiva",
+            "Cirugía Pediátrica",
+            "Dermatología",
+            "Endocrinología",
+            "Gastroenterología",
+            "Geriatría",
+            "Ginecología y Obstetricia",
+            "Hematología",
+            "Infectología",
+            "Medicina del Deporte",
+            "Medicina de Rehabilitación",
+            "Medicina Crítica",
+            "Medicina Interna",
+            "Medicina Familiar",
+            "Nefrología",
+            "Neumología",
+            "Neurología",
+            "Nutriología Clínica",
+            "Oftalmología",
+            "Oncología Médica",
+            "Ortopedia y Traumatología",
+            "Otorrinolaringología",
+            "Patología",
+            "Pediatría",
+            "Psiquiatría",
+            "Radiología",
+            "Reumatología",
+            "Urología",
         ];
 
         foreach ($specialties as $name) {
@@ -25,4 +50,3 @@ class SpecialtySeeder extends Seeder
         }
     }
 }
-

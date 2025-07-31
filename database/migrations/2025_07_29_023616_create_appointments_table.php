@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id(); // id de la cita
             $table->foreignId('patient_id')->constrained('users'); // FK a la tabla 'users' para el paciente
+            $table->foreignId('doctor_id')->constrained('users'); // FK a la tabla 'users' para el doctor
             $table->foreignId('service_id')->constrained('services'); // FK a la tabla 'services' para el servicio
             $table->dateTime('date'); // Fecha y hora de la cita
             $table->string('motive'); // Motivo de la cita
