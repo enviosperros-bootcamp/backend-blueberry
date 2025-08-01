@@ -27,9 +27,9 @@ class DatabaseSeeder extends Seeder
         /* TESTING CODE VALUES*/
                 $this->call([
             SpecialtySeeder::class,
-            DoctorSeeder::class,
-            ServiceSeeder::class,
-            AppointmentSeeder::class
+            // DoctorSeeder::class,
+            // ServiceSeeder::class,
+            // AppointmentSeeder::class
         ]);
     }
 }
