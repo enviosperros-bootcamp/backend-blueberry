@@ -39,7 +39,13 @@ public function upsertDoctorInfo(Request $request)
 
 public function show($id)
 {
-    $doctorInfo = DoctorInfo::with('user.specialties', 'user.services', 'user.locations')->where('user_id', $id)->first();
+    $doctorInfo = DoctorInfo::with([
+        'user.specialties',
+        'user.locations',
+        'user.services' => function($query) use ($id) {
+            $query->where('user_id', $id); // Solo servicios del doctor actual
+        }
+    ])->where('user_id', $id)->first();
 
     if (!$doctorInfo) {
         return response()->json(['message' => 'Doctor no encontrado'], 404);
@@ -47,5 +53,6 @@ public function show($id)
 
     return response()->json($doctorInfo);
 }
+
 
 }
