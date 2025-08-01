@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        dump('Ejecutando DatabaseSeeder...');
         // User::factory(10)->create();
 
         /* DEFAULT CODE VALUES*/

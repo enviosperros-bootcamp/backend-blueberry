@@ -77,5 +77,9 @@ Route::middleware('auth:api')->group(function () {
     // Citas proximas por paciente
     Route::get('/appointments/upcoming-by-patient', [AppointmentController::class, 'upcomingByPatient']);
 
+    //Doctor Info
+    Route::post('/doctor-info/upsert', [DoctorInfoController::class, 'upsertDoctorInfo']);
 
+    //DoctorTest view 
+    Route::get('/doctor-info/{id}', [DoctorInfoController::class, 'show']);
 });

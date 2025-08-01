@@ -7,18 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 class DoctorInfo extends Model
 {
     protected $fillable = [
-        'user_id', 
-        'professional_license', 
-        'specialty_id', 
-        'service_id', 
+        'user_id',
+        'professional_license',
         'feedback_id'
     ];
+
+    public function specialties()
+    {
+        return $this->belongsToMany(Specialty::class, 'doctor_specialty', 'user_id', 'specialty_id');
+    }
 
     // Relación con el modelo User
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+    
 
     // Relación con el modelo Specialty 
     public function specialty()
@@ -35,6 +39,8 @@ class DoctorInfo extends Model
     // Relación con el modelo Feedback 
     public function feedbacks()
     {
-        return $this->hasMany(Feedback::class);  
+        return $this->hasMany(Feedback::class);
     }
+
+    
 }

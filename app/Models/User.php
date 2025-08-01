@@ -58,8 +58,13 @@ class User extends Authenticatable implements JWTSubject
     // RELACIONES BD
     public function specialties()
     {
-        return $this->belongsToMany(Specialty::class, 'doctor_specialty');
+    return $this->belongsToMany(Specialty::class, 'doctor_specialty', 'user_id', 'specialty_id');
     }
+
+    public function services()
+{
+    return $this->belongsToMany(Service::class, 'doctor_service', 'user_id', 'service_id');
+}
 
     public function locations()
     {

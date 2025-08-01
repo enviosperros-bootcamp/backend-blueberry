@@ -12,13 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('doctor_infos', function (Blueprint $table) {
-            $table->id(); // id del doctor_info
-            $table->foreignId('user_id')->constrained('users'); // FK a la tabla 'users' (usuario)
-            $table->string('professional_license'); // Licencia profesional del doctor
-            $table->foreignId('specialty_id')->constrained('specialties'); // FK a la tabla 'specialties'
-            $table->foreignId('service_id')->constrained('services'); // FK a la tabla 'services'
-            $table->foreignId('feedback_id')->nullable()->constrained('feedback'); // FK a la tabla 'feedback'
-            $table->timestamps(); // created_at y updated_at
+            $table->id();
+
+            // FK a users (doctor)
+            $table->unsignedBigInteger('user_id')->unique();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->string('professional_license');
+
+            // Si tienes feedback relacionado aquí, podrías agregar:
+            $table->unsignedBigInteger('feedback_id')->nullable();
+            // Opcionalmente:
+            // $table->foreign('feedback_id')->references('id')->on('feedbacks')->onDelete('set null');
+
+            $table->timestamps();
         });
     }
 
