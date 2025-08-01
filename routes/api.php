@@ -30,11 +30,11 @@ Route::prefix('services')->group(function () {
 });
 
 Route::prefix('appointments')->group(function () {
-    Route::get('/', [AppointmentController::class, 'index']); 
-    Route::get('/by-patient', [AppointmentController::class, 'getByPatient']); 
-    Route::post('/', [AppointmentController::class, 'store']); 
-    Route::put('/{id}', [AppointmentController::class, 'update']); 
-    Route::delete('/{id}', [AppointmentController::class, 'destroy']); 
+    Route::get('/', [AppointmentController::class, 'index']);
+    Route::get('/by-patient', [AppointmentController::class, 'getByPatient']);
+    Route::post('/', [AppointmentController::class, 'store']);
+    Route::put('/{id}', [AppointmentController::class, 'update']);
+    Route::delete('/{id}', [AppointmentController::class, 'destroy']);
 });
 
 Route::prefix('appointments')->group(function () {
@@ -58,7 +58,23 @@ Route::prefix('doctores')->group(function () {
 });
 
 
+
+
 Route::middleware('auth:api')->group(function () {
     // Rutas protegidas
     Route::get('/doctors', [DoctorController::class, 'index']);
+    // Estadisticas
+    Route::get('/appointments/statistics/monthly', [AppointmentController::class, 'monthlyAppointmentsByDoctor']);
+    Route::get('/appointments/statistics/weekly', [AppointmentController::class, 'weeklyAppointmentsByDoctor']);
+    Route::get('/patients/statistics/monthly', [AppointmentController::class, 'newPatientsPerMonthForDoctor']);
+    Route::get('/appointments/statistics/age-distribution', [AppointmentController::class, 'ageDistributionByDoctor']);
+    Route::get('/appointments/statistics/service-distribution', [AppointmentController::class, 'serviceDistributionByDoctor']);
+    // Citas FullCalendar
+    Route::get('/appointments/by-doctor', [AppointmentController::class, 'appointmentsByDoctor']);
+    Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
+    Route::put('/appointments/{id}', [AppointmentController::class, 'update']);
+
+
+
+
 });
