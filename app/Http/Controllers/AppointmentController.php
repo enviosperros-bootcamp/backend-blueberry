@@ -12,47 +12,47 @@ use App\Models\User;
 class AppointmentController extends Controller
 {
     // Crear una nueva cita (POST /api/appointments)
-public function store(Request $request)
-{
-    $validated = $request->validate([
-        'patient_id' => 'required|exists:users,id',
-        'service_id' => 'required|exists:services,id',
-        'date' => 'required|date|after:now',
-        'motive' => 'required|string',
-    ]);
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'patient_id' => 'required|exists:users,id',
+            'service_id' => 'required|exists:services,id',
+            'date' => 'required|date|after:now',
+            'motive' => 'required|string',
+        ]);
 
-    $service = Service::findOrFail($validated['service_id']);
-    $doctorId = $service->doctor_id;
-    $appointmentDate = new \DateTime($validated['date']);
+        $service = Service::findOrFail($validated['service_id']);
+        $doctorId = $service->doctor_id;
+        $appointmentDate = new \DateTime($validated['date']);
 
-    // Definir el rango de 1 hora antes y después
-    $startRange = (clone $appointmentDate)->modify('-1 hour');
-    $endRange = (clone $appointmentDate)->modify('+1 hour');
+        // Definir el rango de 1 hora antes y después
+        $startRange = (clone $appointmentDate)->modify('-1 hour');
+        $endRange = (clone $appointmentDate)->modify('+1 hour');
 
-    // Buscar citas del doctor en ese rango
-    $conflict = Appointment::where('doctor_id', $doctorId)
-        ->whereBetween('date', [$startRange->format('Y-m-d H:i:s'), $endRange->format('Y-m-d H:i:s')])
-        ->exists();
+        // Buscar citas del doctor en ese rango
+        $conflict = Appointment::where('doctor_id', $doctorId)
+            ->whereBetween('date', [$startRange->format('Y-m-d H:i:s'), $endRange->format('Y-m-d H:i:s')])
+            ->exists();
 
-    if ($conflict) {
+        if ($conflict) {
+            return response()->json([
+                'message' => 'El doctor ya tiene una cita dentro de una hora de esta hora. Por favor elige otro horario.'
+            ], 422);
+        }
+
+        $appointment = Appointment::create([
+            'patient_id' => $validated['patient_id'],
+            'doctor_id'  => $doctorId,
+            'service_id' => $validated['service_id'],
+            'date' => $validated['date'],
+            'motive' => $validated['motive'],
+        ]);
+
         return response()->json([
-            'message' => 'El doctor ya tiene una cita dentro de una hora de esta hora. Por favor elige otro horario.'
-        ], 422);
+            'message' => 'Appointment created successfully',
+            'appointment' => $appointment
+        ], 201);
     }
-
-    $appointment = Appointment::create([
-        'patient_id' => $validated['patient_id'],
-        'doctor_id'  => $doctorId,
-        'service_id' => $validated['service_id'],
-        'date' => $validated['date'],
-        'motive' => $validated['motive'],
-    ]);
-
-    return response()->json([
-        'message' => 'Appointment created successfully',
-        'appointment' => $appointment
-    ], 201);
-}
 
 
     // Obtener todas las citas (GET /api/appointments)
@@ -303,5 +303,22 @@ public function store(Request $request)
             });
 
         return response()->json($appointments);
+    }
+
+    // Futuras consultas para un paciente
+    public function upcomingByPatient()
+    {
+        $patientId = auth()->id(); // se obtiene del JWT automáticamente
+        $today = now();
+
+        $appointments = Appointment::with(['doctor', 'service'])
+            ->where('patient_id', $patientId)
+            ->where('date', '>=', $today)
+            ->orderBy('date', 'asc')
+            ->get();
+
+        return response()->json([
+            'appointments' => $appointments
+        ]);
     }
 }

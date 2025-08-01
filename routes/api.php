@@ -74,7 +74,8 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
     Route::put('/appointments/{id}', [AppointmentController::class, 'update']);
 
-
+    // Citas proximas por paciente
+    Route::get('/appointments/upcoming-by-patient', [AppointmentController::class, 'upcomingByPatient']);
 
 
 });
